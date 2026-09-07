@@ -7,6 +7,7 @@ Lina OS는 [Omarchy](https://omarchy.org/)와 개인 에이전트 [Lina](https:/
 ## 영감을 받은 프로젝트
 
 - **[Omarchy](https://omarchy.org/)** — 기본 앱과 테마, 작업 도구를 갖춘 일관된 Linux 데스크톱. Lina OS의 데스크톱 기반으로 선택했습니다.
+- **[omarchy-gpu-live](https://github.com/Hostingglobal-Tech/omarchy-gpu-live)** — Omarchy의 한글 입력·폰트와 NVIDIA GPU 대응을 참고했습니다. 작업을 공개해 주신 Hostingglobal-Tech에 감사드립니다.
 - **[Grok Bot](https://docs.x.ai/grok-bot/faq)** — 에이전트가 계속 유지되는 컴퓨터에서 각자의 화면으로 일하고, 파일과 로그인을 공유하는 방식. 여러 에이전트의 동시 작업과 사람이 함께 개입하는 경험을 설계할 때 참고했습니다.
 
 이 위에 Lina의 페르소나와 기억을 더해, 함께 일할수록 나를 알아가는 개인 에이전트 환경을 만들고자 합니다.
