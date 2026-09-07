@@ -20,7 +20,8 @@
       "desktop-manager",
       "tailscale",
       "opencodex",
-      "omo-native"
+      "omo-native",
+      "undefined-ci-probe"
     ]
   },
   "modules": {
