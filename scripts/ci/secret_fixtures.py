@@ -18,7 +18,7 @@ def verify_scanner(binary: Path, config: Path, work: Path) -> None:
                         "GIT_AUTHOR_EMAIL": "123+fixture@users.noreply.github.com",
                         "GIT_COMMITTER_EMAIL": "noreply@github.com"})
     token = "ghp_" + "".join(random.Random(946).sample(string.ascii_letters + string.digits, 36))
-    for scenario in ("removed", "merge"):
+    for scenario in ("removed", "merge", "removed-svg", "removed-lockfile"):
         root = work / scenario
         root.mkdir()
 
@@ -44,14 +44,15 @@ def verify_scanner(binary: Path, config: Path, work: Path) -> None:
             (root / "dev.md").write_text("Dev\n")
             commit()
             git("merge", "--no-ff", "--no-commit", "side")
-        (root / "leak.py").write_text('token = "' + token + '" # gitleaks:allow\n')
+        leak_path = {"removed-svg": "image.svg", "removed-lockfile": "package-lock.json"}.get(scenario, "leak.py")
+        (root / leak_path).write_text('token = "' + token + '" # gitleaks:allow\n')
         commit()
         sha = git("rev-parse", "HEAD")
         if scenario == "merge":
             require(len(git("show", "-s", "--format=%P", "HEAD").split()) == 2,
                     "synthetic secret must exist only in a merge commit")
-        (root / "leak.py").unlink()
-        (root / ".gitleaksignore").write_text(f"{sha}:leak.py:github-pat:1\n")
+        (root / leak_path).unlink()
+        (root / ".gitleaksignore").write_text(f"{sha}:{leak_path}:github-pat:1\n")
         commit()
         old = os.environ.get("GITLEAKS_CONFIG_TOML")
         os.environ["GITLEAKS_CONFIG_TOML"] = '[allowlist]\npaths = [".*"]\n'
@@ -63,4 +64,4 @@ def verify_scanner(binary: Path, config: Path, work: Path) -> None:
                 os.environ.pop("GITLEAKS_CONFIG_TOML", None)
             else:
                 os.environ["GITLEAKS_CONFIG_TOML"] = old
-    print("Gitleaks self-tests: clean, removed, merge, ignore overrides passed")
+    print("Gitleaks self-tests: clean, removed, merge, removed SVG/lockfile, ignore overrides passed")

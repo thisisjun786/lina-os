@@ -6,6 +6,8 @@ from pathlib import Path
 import subprocess
 import sys
 
+from identifiers import has_private_identifier
+
 MAX_SOURCE_BYTES = 2 * 1024 * 1024
 
 
@@ -44,6 +46,7 @@ def source_files(root: Path) -> list[Path]:
     names = git(root, "ls-files", "-z", "--cached", "--others", "--exclude-standard")
     paths = sorted({Path(name.decode("utf-8")) for name in names.split(b"\0") if name})
     for path in paths:
+        require(not has_private_identifier(str(path)), "private source filename (value redacted)")
         target = root / path
         require(not target.is_symlink(), f"source symlink is forbidden: {path}")
         require(target.resolve().is_relative_to(root), "source path escapes repository")

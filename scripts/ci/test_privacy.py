@@ -2,6 +2,26 @@ from test_support import RepositoryCase
 
 
 class PrivacyTests(RepositoryCase):
+    def test_private_filenames_are_rejected_without_echoing_them(self):
+        names = ["192." + "168.55.9.md", "person" + "@private.invalid.md"]
+        for name in names:
+            with self.subTest(kind=name.rsplit(".", 1)[-1]):
+                self.write(name, "Safe contents\n")
+                result = self.cli("privacy")
+                self.fails(result, "private source filename")
+                self.assertNotIn(name, result.stdout + result.stderr)
+                (self.root / name).unlink()
+
+    def test_removed_private_filename_is_rejected_and_redacted(self):
+        name = "notes/person" + "@private.invalid.md"
+        self.write(name, "Safe contents\n")
+        self.commit()
+        (self.root / name).unlink()
+        self.commit()
+        result = self.cli("privacy", "--history")
+        self.fails(result, "private source filename")
+        self.assertNotIn(name, result.stdout + result.stderr)
+
     def test_clean_worktree(self):
         self.passes(self.cli("privacy"), "privacy: passed")
 

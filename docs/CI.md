@@ -24,9 +24,16 @@ Git history; an unborn or shallow repository is an error. Tests use isolated,
 synthetic repositories and controlled network responses. The public-reference
 command makes real unauthenticated requests and fails on unavailable sources.
 
+Workflow and issue-form `.yml` files use JSON syntax, which is valid YAML, so the
+contract checker can inspect them without installing a YAML parser.
+
 The tool launcher downloads pinned Linux x86-64 releases to temporary directories
 and verifies their checksums. It installs nothing globally. The secret command
 also exercises synthetic secret histories and scans both source and history.
+Historical filenames, messages and file contents are additionally sent to the
+scanner as stdin so its default SVG/lockfile path exclusions cannot hide a deleted
+secret. Source files are limited to 2 MiB each and combined historical input to
+64 MiB; exceeding a limit fails rather than skipping content.
 See [the executable workflow](../.github/workflows/ci.yml) and
 [CI scripts](../scripts/ci) for the commands and checksum pins. For source-only
 privacy feedback before the first commit, omit `--history`; this does not verify
