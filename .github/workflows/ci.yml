@@ -1,0 +1,138 @@
+{
+  "name": "Lina OS CI",
+  "on": {
+    "pull_request": {
+      "types": [
+        "opened",
+        "reopened",
+        "synchronize",
+        "edited"
+      ]
+    }
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "concurrency": {
+    "group": "lina-os-ci-${{ github.event.pull_request.number }}",
+    "cancel-in-progress": true
+  },
+  "jobs": {
+    "contracts": {
+      "runs-on": "ubuntu-24.04",
+      "timeout-minutes": 10,
+      "steps": [
+        {
+          "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "with": {
+            "fetch-depth": 1,
+            "persist-credentials": false
+          }
+        },
+        {
+          "name": "Test CI controls",
+          "run": "python3 -m unittest discover -s scripts/ci -p 'test_*.py'"
+        },
+        {
+          "name": "Validate source contracts",
+          "run": "python3 scripts/ci/contracts.py"
+        },
+        {
+          "name": "Check workflow syntax",
+          "run": "python3 scripts/ci/tools.py actionlint"
+        },
+        {
+          "name": "Verify public Lina references",
+          "run": "python3 scripts/ci/public_refs.py"
+        }
+      ]
+    },
+    "security": {
+      "runs-on": "ubuntu-24.04",
+      "timeout-minutes": 10,
+      "steps": [
+        {
+          "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "with": {
+            "fetch-depth": 0,
+            "persist-credentials": false
+          }
+        },
+        {
+          "name": "Check source and history privacy",
+          "run": "python3 scripts/ci/privacy.py --history"
+        },
+        {
+          "name": "Test scanner and scan worktree plus complete history",
+          "run": "python3 scripts/ci/tools.py secrets"
+        }
+      ]
+    },
+    "dev-gate": {
+      "runs-on": "ubuntu-24.04",
+      "timeout-minutes": 3,
+      "steps": [
+        {
+          "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "with": {
+            "fetch-depth": 1,
+            "persist-credentials": false
+          }
+        },
+        {
+          "name": "Aggregate results",
+          "env": {
+            "NEEDS_JSON": "${{ toJSON(needs) }}",
+            "EXPECTED_RELEASE": "false",
+            "BASE_REF": "${{ github.base_ref }}",
+            "HEAD_REF": "${{ github.head_ref }}",
+            "BASE_REPO": "${{ github.repository }}",
+            "HEAD_REPO": "${{ github.event.pull_request.head.repo.full_name }}",
+            "BASE_REPO_ID": "${{ github.event.pull_request.base.repo.id }}",
+            "HEAD_REPO_ID": "${{ github.event.pull_request.head.repo.id }}"
+          },
+          "run": "python3 scripts/ci/gate.py"
+        }
+      ],
+      "name": "dev-gate",
+      "needs": [
+        "contracts",
+        "security"
+      ],
+      "if": "always() && github.base_ref != 'main'"
+    },
+    "release-gate": {
+      "runs-on": "ubuntu-24.04",
+      "timeout-minutes": 3,
+      "steps": [
+        {
+          "uses": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "with": {
+            "fetch-depth": 1,
+            "persist-credentials": false
+          }
+        },
+        {
+          "name": "Aggregate results",
+          "env": {
+            "NEEDS_JSON": "${{ toJSON(needs) }}",
+            "EXPECTED_RELEASE": "true",
+            "BASE_REF": "${{ github.base_ref }}",
+            "HEAD_REF": "${{ github.head_ref }}",
+            "BASE_REPO": "${{ github.repository }}",
+            "HEAD_REPO": "${{ github.event.pull_request.head.repo.full_name }}",
+            "BASE_REPO_ID": "${{ github.event.pull_request.base.repo.id }}",
+            "HEAD_REPO_ID": "${{ github.event.pull_request.head.repo.id }}"
+          },
+          "run": "python3 scripts/ci/gate.py"
+        }
+      ],
+      "name": "release-gate",
+      "needs": [
+        "contracts",
+        "security"
+      ],
+      "if": "always() && github.base_ref == 'main'"
+    }
+  }
+}

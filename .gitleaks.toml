@@ -1,0 +1,4 @@
+title = "Lina OS source secrets"
+
+[extend]
+useDefault = true

@@ -1,0 +1,45 @@
+{
+  "name": "Compatibility report",
+  "description": "Record a dependency or platform compatibility issue.",
+  "body": [
+    {
+      "type": "markdown",
+      "attributes": {
+        "value": "Do not include credentials, private conversations, personal machine inventories or unredacted logs. Use the security reporting link for vulnerabilities."
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "versions",
+      "attributes": {
+        "label": "Exact configuration",
+        "description": "Lina revision, OS/kernel/GPU, desktop backend, Codex/OpenCodex/OmO versions as relevant."
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "behavior",
+      "attributes": {
+        "label": "Observed behavior",
+        "description": "Separate installed, configured and actually exercised behavior; include reproduction."
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "evidence",
+      "attributes": {
+        "label": "Evidence",
+        "description": "Redacted outputs; expected result; relevant upstream change or link."
+      },
+      "validations": {
+        "required": false
+      }
+    }
+  ]
+}

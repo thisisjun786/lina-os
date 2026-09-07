@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "status": "design",
+  "productRepository": "https://github.com/thisisjun786/lina",
+  "productSourceRevision": "e41ce13bf4566f5850936742186e1643266959e9",
+  "dataHome": "LINA_HOME or ~/.lina",
+  "profiles": {
+    "native": [
+      "lina-runtime"
+    ],
+    "dedicated-computer": [
+      "lina-runtime",
+      "computer-connector",
+      "desktop-manager"
+    ],
+    "os": [
+      "lina-runtime",
+      "os-base",
+      "host-connector",
+      "desktop-manager",
+      "tailscale",
+      "opencodex",
+      "omo-native"
+    ]
+  },
+  "modules": {
+    "lina-runtime": {
+      "owner": "lina",
+      "status": "source-pinned"
+    },
+    "os-base": {
+      "owner": "lina-os",
+      "foundation": "Omarchy",
+      "status": "planned"
+    },
+    "host-connector": {
+      "owner": "lina-os",
+      "status": "planned"
+    },
+    "computer-connector": {
+      "owner": "lina",
+      "status": "planned"
+    },
+    "desktop-manager": {
+      "owner": "lina-os",
+      "status": "planned"
+    },
+    "tailscale": {
+      "owner": "external",
+      "status": "onboarding-required"
+    },
+    "opencodex": {
+      "owner": "external",
+      "status": "onboarding-required"
+    },
+    "omo-native": {
+      "owner": "external",
+      "status": "development-tool",
+      "independentLifecycle": true
+    }
+  },
+  "isolation": {
+    "direct": "host capability must be declared",
+    "task-container": "planned executor backend",
+    "runtime-container": "packaging in Lina deploy/containers"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "Bug report",
+  "description": "Report a reproducible source or installation defect.",
+  "body": [
+    {
+      "type": "markdown",
+      "attributes": {
+        "value": "Do not include credentials, private conversations, personal machine inventories or unredacted logs. Use the security reporting link for vulnerabilities."
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "summary",
+      "attributes": {
+        "label": "What happened?",
+        "description": "Describe the expected and actual result."
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "reproduce",
+      "attributes": {
+        "label": "Reproduction",
+        "description": "Use minimal steps and synthetic data."
+      },
+      "validations": {
+        "required": false
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "environment",
+      "attributes": {
+        "label": "Environment",
+        "description": "Source revision; OS/kernel, hardware/backend and tool versions where relevant."
+      },
+      "validations": {
+        "required": false
+      }
+    }
+  ]
+}

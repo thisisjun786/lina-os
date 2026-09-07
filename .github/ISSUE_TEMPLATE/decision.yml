@@ -1,0 +1,34 @@
+{
+  "name": "Design decision",
+  "description": "Discuss a product or architecture tradeoff.",
+  "body": [
+    {
+      "type": "markdown",
+      "attributes": {
+        "value": "Do not include credentials, private conversations, personal machine inventories or unredacted logs. Use the security reporting link for vulnerabilities."
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "decision",
+      "attributes": {
+        "label": "Decision needed",
+        "description": "State the concrete question and affected contract."
+      },
+      "validations": {
+        "required": true
+      }
+    },
+    {
+      "type": "textarea",
+      "id": "alternatives",
+      "attributes": {
+        "label": "Alternatives and evidence",
+        "description": "Compare options and the cheapest observation that would distinguish them."
+      },
+      "validations": {
+        "required": false
+      }
+    }
+  ]
+}
