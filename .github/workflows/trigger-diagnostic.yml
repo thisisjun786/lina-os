@@ -1,0 +1,12 @@
+name: CI trigger diagnostic
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+permissions:
+  contents: read
+jobs:
+  trigger-diagnostic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - run: echo 'Native YAML PR trigger reached the runner'
